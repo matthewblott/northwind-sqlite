@@ -72,7 +72,7 @@ orders = [row[0] for row in c.fetchall()]
 for order in orders:
     used = []
     for x in range(randint(1, len(products))):
-        sql = "INSERT INTO [Order Details] (OrderId, ProductId, UnitPrice, Quantity, Discount) VALUES (?, ?, ?, ?, ?)"
+        sql = "INSERT INTO [OrderDetails] (OrderId, ProductId, UnitPrice, Quantity, Discount) VALUES (?, ?, ?, ?, ?)"
         control = 1
         while control:
             product = rc(products)
@@ -91,7 +91,7 @@ for order in orders:
 
 # Cleanup
 # c.execute('update [Order] set OrderDate = date(OrderDate), RequiredDate = date(RequiredDate), ShippedDate = date(ShippedDate)')
-c.execute("select sum(Quantity)*0.25+10, OrderId from [Order Details] group by OrderId")
+c.execute("select sum(Quantity)*0.25+10, OrderId from [OrderDetails] group by OrderId")
 orders = [(row[0], row[1]) for row in c.fetchall()]
 for order in orders:
     c.execute("update [Orders] set Freight=? where OrderId=?", (order[0], order[1]))

@@ -75,14 +75,3 @@ update [Suppliers] set Region='Scandinavia' where Country='Finland';
 update [Suppliers] set Region='Eastern Asia' where Country='Japan';
 update [Suppliers] set Region='South-East Asia' where Country='Singapore';
 update [Suppliers] set Region='Northern Europe' where Country='Netherlands';
-
-
-create view [ProductDetails_V] as
-select 
-p.*, 
-c.CategoryName, c.Description as [CategoryDescription],
-s.CompanyName as [SupplierName], s.Region as [SupplierRegion]
-from [Products] p
-join [Categories] c on p.CategoryId = c.CategoryId
-join [Suppliers] s on s.SupplierId = p.SupplierId;
-
