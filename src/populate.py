@@ -15,25 +15,25 @@ c = conn.cursor()
 
 # ShipName, ShipAddress, ShipCity, ShipRegion, ShipPostalCode
 c.execute(
-    "select distinct ShipName, ShipAddress, ShipCity, ShipRegion, ShipPostalCode, ShipCountry from [Orders]"
+    "SELECT DISTINCT ShipName, ShipAddress, ShipCity, ShipRegion, ShipPostalCode, ShipCountry FROM Orders"
 )
 locations = [(row[0], row[1], row[2], row[3], row[4], row[5]) for row in c.fetchall()]
 
 # Customer.Id
-c.execute("select distinct EmployeeId from [Employees]")
+c.execute("SELECT DISTINCT EmployeeId FROM Employees")
 employees = [row[0] for row in c.fetchall()]
 
 # Shipper.Id
-c.execute("select distinct ShipperId from [Shippers]")
+c.execute("SELECT DISTINCT ShipperId FROM Shippers")
 shippers = [row[0] for row in c.fetchall()]
 
 # Customer.Id
-c.execute("select distinct CustomerId from [Customers]")
+c.execute("SELECT DISTINCT CustomerId FROM Customers")
 customers = [row[0] for row in c.fetchall()]
 
 # Create a bunch of new orders
 for i in range(randint(15000, 16000)):
-    sql = "INSERT INTO [Orders] (CustomerId, EmployeeId, OrderDate, RequiredDate, ShippedDate, ShipVia, Freight, ShipName, ShipAddress, ShipCity, ShipRegion, ShipPostalCode, ShipCountry) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+    sql = "INSERT INTO Orders (CustomerId, EmployeeId, OrderDate, RequiredDate, ShippedDate, ShipVia, Freight, ShipName, ShipAddress, ShipCity, ShipRegion, ShipPostalCode, ShipCountry) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
     location = rc(locations)
     order_date = random_date(
         datetime.strptime("2012-07-10", "%Y-%m-%d"), datetime.today()
@@ -61,18 +61,18 @@ for i in range(randint(15000, 16000)):
 
 
 # Product.Id
-c.execute("select distinct ProductId, UnitPrice from [Products]")
+c.execute("SELECT DISTINCT ProductId, UnitPrice from [Products]")
 products = [(row[0], row[1]) for row in c.fetchall()]
 
 # Order.Id
-c.execute("select distinct OrderId from [Orders] where Freight = 0.00")
+c.execute("SELECT DISTINCT OrderId FROM Orders WHERE Freight = 0.00")
 orders = [row[0] for row in c.fetchall()]
 
 # Fill the order with items
 for order in orders:
     used = []
     for x in range(randint(1, len(products))):
-        sql = "INSERT INTO [OrderDetails] (OrderId, ProductId, UnitPrice, Quantity, Discount) VALUES (?, ?, ?, ?, ?)"
+        sql = "INSERT INTO OrderDetails (OrderId, ProductId, UnitPrice, Quantity, Discount) VALUES (?, ?, ?, ?, ?)"
         control = 1
         while control:
             product = rc(products)
@@ -90,11 +90,11 @@ for order in orders:
         c.execute(sql, params)
 
 # Cleanup
-# c.execute('update [Order] set OrderDate = date(OrderDate), RequiredDate = date(RequiredDate), ShippedDate = date(ShippedDate)')
-c.execute("select sum(Quantity)*0.25+10, OrderId from [OrderDetails] group by OrderId")
+# c.execute('UPDATE [Order] SET OrderDate = date(OrderDate), RequiredDate = date(RequiredDate), ShippedDate = date(ShippedDate)')
+c.execute("select sum(Quantity)*0.25+10, OrderId FROM OrderDetails group by OrderId")
 orders = [(row[0], row[1]) for row in c.fetchall()]
 for order in orders:
-    c.execute("update [Orders] set Freight=? where OrderId=?", (order[0], order[1]))
+    c.execute("UPDATE Orders SET Freight=? WHERE OrderId=?", (order[0], order[1]))
 
 
 conn.commit()

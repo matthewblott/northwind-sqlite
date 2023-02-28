@@ -11,3 +11,4 @@ build: clean
 
 populate:
 	python3 ./src/populate.py
+
