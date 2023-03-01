@@ -5958,6 +5958,36 @@ VALUES('98052', 'Redmond                                           ', 2);
 INSERT INTO Territories (TerritoryId, TerritoryDescription, RegionId)
 VALUES('98104', 'Seattle                                           ', 2);
 SELECT * FROM Territories;
+-- EmployeesTerritoriesView
+DROP VIEW IF EXISTS EmployeeTerritoriesView;
+CREATE VIEW EmployeeTerritoriesView as
+SELECT
+  e.EmployeeId,
+  e.LastName,
+  e.FirstName,
+  e.Title,
+  e.TitleOfCourtesy,
+  e.BirthDate,
+  e.HireDate,
+  e.Address,
+  e.City,
+  e.Region,
+  e.PostalCode,
+  e.Country,
+  e.HomePhone,
+  e.Extension,
+  e.Notes,
+  e.ReportsTo,
+  e.PhotoPath,
+  t.TerritoryId,
+  t.TerritoryDescription,
+  r.RegionId,
+  r.RegionDescription
+FROM
+  Employees e join
+  EmployeeTerritories et on e.EmployeeId = et.EmployeeId join
+  Territories t on et.TerritoryId = t.TerritoryId join
+  Regions r on t.RegionId = r.RegionId;
 
 PRAGMA foreign_keys=on;
 
